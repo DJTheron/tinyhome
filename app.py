@@ -14,7 +14,6 @@ import os
 
 bearer = os.environ["BEARER"]
 
-
 getdevices = requests.get("http://192.168.3.30/api/manager/devices/device", headers={"Authorization": f"Bearer {bearer}"})
 getzones = requests.get("http://192.168.3.30/api/manager/zones/zone", headers={"Authorization": f"Bearer {bearer}"})
     
