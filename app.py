@@ -5,9 +5,15 @@ from openwakeword.model import Model
 import requests
 import whisper
 import re
+import os
 
+
+# warm up whisper/ load the model for first run!
 
 # Homey Stuff
+
+bearer = os.environ["BEARER"]
+
 bearer = "0c2479d6-5c65-4788-8df2-7d7120c57507:6a53f79c-6654-41b8-a449-063e6f4fa18f:2aa82066efc1f34d0cef6ae8f51e7945396b512a"
 
 getdevices = requests.get("http://192.168.3.30/api/manager/devices/device", headers={"Authorization": f"Bearer {bearer}"})
