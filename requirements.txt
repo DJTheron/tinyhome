@@ -1,3 +1,4 @@
 requests
 ollama
-openai-whisper
+faster-whisper
+openwakeword
