@@ -9,6 +9,17 @@ import os
 
 
 # warm up whisper/ load the model for first run!
+""" Fixes
+ 1. VAD (voice activity/inactivity detection):
+    detects when voice stops and then stops recording so program can process stt
+    - webrtcvad
+    - Silero VAD
+ 2. Optimised whisper runtime
+    - whisper.cpp
+    - faster-whisper
+ 3. other lookup method not LLM for faster requests but with LLM as fallback
+"""
+
 
 # Homey Stuff
 
