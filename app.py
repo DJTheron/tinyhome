@@ -3,7 +3,7 @@ import pyaudio
 import numpy as np
 from openwakeword.model import Model
 import requests
-import faster-whisper
+import faster_whisper
 import re
 import os
 
