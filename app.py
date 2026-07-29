@@ -16,7 +16,7 @@ import os
     - Silero VAD
  2. Optimised whisper runtime
     - whisper.cpp
-    - faster-whisper
+    - faster-whisper (i chose this one for better performance and simplicity and runs best on nvidia gpu which i have): https://pypi.org/project/faster-whisper/
  3. other lookup method not LLM for faster requests but with LLM as fallback
 """
 
@@ -82,14 +82,11 @@ mic_stream = audio.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True,
 MODEL_PATH = "Hey_Potato_20260228_130124.onnx"
 WAKEWORD_KEY = "Hey_Potato_20260228_130124"
 
-owwModel = Model(inference_framework='onnx', wakeword_models=[MODEL_PATH])
-
-
+openwakemodel = Model(inference_framework='onnx', wakeword_models=[MODEL_PATH])
 
 
 # Whisper Stuff
-model = whisper.load_model("tiny.en")
-
+model = faster_whisper.WhisperModel("tiny.en", device="cpu", compute_type="int8")
 
 
 
@@ -99,7 +96,7 @@ while True:
     audio_chunk = np.frombuffer(mic_stream.read(CHUNK), dtype=np.int16)
 
     # Feed to openWakeWord model
-    prediction = owwModel.predict(audio_chunk)[WAKEWORD_KEY]  # type: ignore[reportCallIssue]
+    prediction = openwakemodel.predict(audio_chunk)
 
     print(prediction)
 
@@ -109,8 +106,9 @@ while True:
         command_cup = np.frombuffer(mic_stream.read(RATE * 3), dtype=np.int16).astype(np.float32) / 32768.0
         
         
-        result = model.transcribe(command_cup, fp16=False)["text"]
-        print(result)
+        segments, _ = model.transcribe("audio.mp3")
+        segments = list(segments)
+        print(segments)
 
         devices.clear()
         userprompt = "These are the list of available devices in the house: " + str(list_devices()) + "You must control them in a certain way, the current functionality is just turning on and off by including the command onoffcontrol(thedevicesname, thestateyouwanttosetittoeithertrueorfalse) in plain text, not as code." + "This is the users request to you from Text To Speach: " + str(result)
