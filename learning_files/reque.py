@@ -1,6 +1,6 @@
 import requests
 
-bearer = "" #expired token deleted
+bearer = "" # expired token deleted
 
 result = requests.get("http://192.168.1.30/api/manager/devices/device", headers={"Authorization": f"Bearer {bearer}"})
 zones = requests.get("http://192.168.1.30/api/manager/zones/zone", headers={"Authorization": f"Bearer {bearer}"})
