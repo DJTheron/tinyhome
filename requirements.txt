@@ -3,3 +3,7 @@ ollama
 faster-whisper
 openwakeword
 pyaudio
+python-dotenv
+numpy
+transformers
+torch
