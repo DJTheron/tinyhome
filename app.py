@@ -35,7 +35,7 @@ top = max(data, key=lambda x: x["score"])
  2. Optimised whisper runtime
     - whisper.cpp
     - faster-whisper (i chose this one for better performance and simplicity and runs best on nvidia gpu which i have): https://pypi.org/project/faster-whisper/
- 3. other lookup method not LLM for faster requests but with LLM as fallback
+ 3. Using LFM2.5 router model
 """
 
 
