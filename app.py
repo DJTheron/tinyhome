@@ -43,44 +43,25 @@ top = max(data, key=lambda x: x["score"])
 bearer = os.environ["BEARER"]
 
 getdevices = requests.get("http://192.168.3.30/api/manager/devices/device", headers={"Authorization": f"Bearer {bearer}"})
-getzones = requests.get("http://192.168.3.30/api/manager/zones/zone", headers={"Authorization": f"Bearer {bearer}"})
-    
-zonemap = {}
-devices = []
 
-if "error" in getzones.json():
-    print("Zones API error:", getzones.json()["error"], "-", getzones.json().get("error_description", ""))
-    exit(1)
-if "error" in getdevices.json():
-    print("Devices API error:", getdevices.json()["error"], "-", getdevices.json().get("error_description", ""))
-    exit(1)
+devices = {}
 
-for zone in getzones.json().values():
-    zonemap.update({zone['id']: zone['name']})
-
-def mappedzone(zone_id):
-    if zone_id in zonemap:
-        return zonemap[zone_id]
-
-def list_devices():
-    for device in getdevices.json().values():   
-        devices.append((device['name'].lower(), mappedzone(device['zone'])))
-    return devices
-
-def devicemap(prettyname):
-    for device_id, device in getdevices.json().items():
-        if device['name'].lower() == prettyname.lower():
-            return device_id
+for device in getdevices.json().values():
+    if device['zone'] == '4cdb0219-bc77-41e8-8fbd-79acd670f01f':
+        devices[device['name']] = device['id']
+        
+        
+print(devices)
 
 def onoffcontrol(devicetocontrol, statetoset):
-    device_id = devicemap(devicetocontrol)
+    device_id = devices[devicetocontrol]
+    
     if not device_id:
         return False
     
     response = requests.put(f"http://192.168.3.30/api/manager/devices/device/{device_id}/capability/onoff", headers={"Authorization": f"Bearer {bearer}"}, json={"value": statetoset})
     response.raise_for_status()
     return True
-
 
 
 
@@ -117,7 +98,7 @@ while True:
 
     print(prediction)
 
-    if prediction > 0.5:
+    if prediction > 0.5: #type: ignore
         print("Wakeword detected!")
         
         command_cup = np.frombuffer(mic_stream.read(RATE * 3), dtype=np.int16).astype(np.float32) / 32768.0
@@ -127,20 +108,4 @@ while True:
         segments = list(segments)
         print(segments)
 
-        devices.clear()
-        userprompt = "These are the list of available devices in the house: " + str(list_devices()) + "You must control them in a certain way, the current functionality is just turning on and off by including the command onoffcontrol(thedevicesname, thestateyouwanttosetittoeithertrueorfalse) in plain text, not as code." + "This is the users request to you from Text To Speach: " + str(result)
-
-        response = chat(
-            model='gemma3:270m',
-            messages=[{'role': 'user', 'content': userprompt}],
-        )
-
-        airesponse = str(response.message.content)
-        print(airesponse)
-
-        matches = re.findall(r'onoffcontrol\(["\']?([^"\']+?)["\']?\s*,\s*(True|False)\)', airesponse, re.IGNORECASE)
-        for match in matches:
-            devicetocontrol = match[0].strip()
-            state = match[1].lower() == "true"
-            onoffcontrol(devicetocontrol, state)
 
