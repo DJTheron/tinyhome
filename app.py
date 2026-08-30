@@ -27,6 +27,7 @@ top = max(data, key=lambda x: x["score"])
 
 
 # warm up whisper/ load the model for first run!
+
 """ Fixes
  1. VAD (voice activity/inactivity detection):
     detects when voice stops and then stops recording so program can process stt
@@ -37,8 +38,6 @@ top = max(data, key=lambda x: x["score"])
     - faster-whisper (i chose this one for better performance and simplicity and runs best on nvidia gpu which i have): https://pypi.org/project/faster-whisper/
  3. Using LFM2.5 router model
 """
-
-
 # Homey Stuff
 
 bearer = os.environ["BEARER"]
