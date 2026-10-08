@@ -5,11 +5,20 @@ tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 model = AutoModel.from_pretrained(model_id, trust_remote_code=True).eval()
 #model = model.to("cuda")
 
-routes = ["Bedside Light On", "Bedside Light Off", "Desk Light Off", "Desk Light On", "Bedroom Light On", "Bedroom Light Off"]
-prompt = "Turn my bedroom light on"
+def best_device(userinput, device_routes):
+    data = model.route(userinput, device_routes, tokenizer=tokenizer)
+    top = max(data, key=lambda x: x["score"])
+    return top["route"], top["score"]
 
-data = model.route(prompt, routes, tokenizer=tokenizer)
+def on_off(userinput):
+    routes = ["Turn device on", "Turn device off"]
+    data = model.route(userinput, routes, tokenizer=tokenizer)        
+    top = max(data, key=lambda x: x["score"])
+    if top["route"] == routes[0]:
+        return True
+    else:
+        return False
 
-top = max(data, key=lambda x: x["score"])
-
-print(top["route"], top["score"])
+user = "bedside deactivate"
+devices = ["Bedside light", "Desk Light", "room light/ceiling light"]
+print(best_device(user, devices), on_off(user))
