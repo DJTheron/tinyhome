@@ -119,7 +119,7 @@ def main():
 
         print(prediction)
 
-        if prediction > 0.5: #type: ignore
+        if prediction[WAKEWORD_KEY] > 0.5: #type: ignore
             print("Wakeword detected!")
             
             command_cup = np.frombuffer(mic_stream.read(RATE * 3), dtype=np.int16).astype(np.float32) / 32768.0
