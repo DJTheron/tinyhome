@@ -1,10 +1,8 @@
-from ollama import chat
 import pyaudio
 import numpy as np
 from openwakeword.model import Model
 import requests
 import faster_whisper
-import re
 import os
 from transformers import AutoModel, AutoTokenizer
 from dotenv import load_dotenv
