@@ -15,7 +15,6 @@ tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 routingmodel = AutoModel.from_pretrained(model_id, trust_remote_code=True).eval()
 routingmodel = routingmodel.to("mps")
 
-
 def warmup():
     startuproutes = ["Bedside Light On", "Bedside Light Off", "Desk Light Off", "Desk Light On", "Bedroom Light On", "Bedroom Light Off"]
     startprompt = "warmup"
@@ -46,10 +45,10 @@ def on_off(userinput):
     detects when voice stops and then stops recording so program can process stt
     - webrtcvad
     - Silero VAD
- 2. Optimised whisper runtime
+ 2. Optimised whisper runtime - done
     - whisper.cpp
     - faster-whisper (i chose this one for better performance and simplicity and runs best on nvidia gpu which i have): https://pypi.org/project/faster-whisper/
- 3. Using LFM2.5 router model
+ 3. Using LFM2.5 router model - done
 """
 
 # Homey Stuff
