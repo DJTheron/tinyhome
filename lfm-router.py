@@ -28,8 +28,10 @@ warmup()
 
 
 user = "bedside deactivate"
-devices = ["Bedside light", "Desk Light", "room light/ceiling light"]
+devices = ["Bedside light", "Desk Light", "bedroom light/ceiling light"]
 
 start = time.perf_counter()
+print(best_device(user, devices), on_off(user))
+user = "bathroom light off"
 print(best_device(user, devices), on_off(user))
 print("Done in:", time.perf_counter() - start, "seconds")
