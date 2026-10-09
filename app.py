@@ -37,7 +37,11 @@ def on_off(userinput):
     else:
         return False
 
-
+def homey_decision(user, devices):
+    device, score, onoff = best_device(user, devices), on_off(user)
+    if score < 0.80:
+        return
+    
 # warm up whisper/ load the model for first run!
 
 """ Fixes
