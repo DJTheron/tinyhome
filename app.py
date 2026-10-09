@@ -28,7 +28,7 @@ def best_device(userinput, device_routes):
     top = max(data, key=lambda x: x["score"])
     return top["route"], top["score"]
 
-def on_off(userinput):
+def on_off(userinput: str):
     routes = ["Turn device on", "Turn device off"]
     data = routingmodel.route(userinput, routes, tokenizer=tokenizer)        
     top = max(data, key=lambda x: x["score"])
@@ -41,6 +41,7 @@ def homey_decision(user, devices):
     device, score, onoff = best_device(user, devices), on_off(user)
     if score < 0.80:
         return
+    
     
 # warm up whisper/ load the model for first run!
 
