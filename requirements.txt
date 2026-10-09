@@ -1,7 +1,7 @@
 requests
-ollama
 faster-whisper
 openwakeword
+onnxruntime
 pyaudio
 python-dotenv
 numpy
