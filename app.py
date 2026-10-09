@@ -101,6 +101,7 @@ openwakemodel = Model(inference_framework='onnx', wakeword_models=[MODEL_PATH])
 model = faster_whisper.WhisperModel("tiny.en", device="cpu", compute_type="int8")
 
 def main():
+    global bearer
     bearer = os.environ["BEARER"]
     zoneid = "4cdb0219-bc77-41e8-8fbd-79acd670f01f"
 
@@ -128,11 +129,11 @@ def main():
             
             
             segments, _ = model.transcribe(command_cup)
-            user = list(segments)
+            user = " ".join(s.text for s in segments).strip()
             
             print(user)
             
-            onoffcontrol(best_device(user, devices), on_off(user), devices)
+            onoffcontrol(best_device(user, devices)[0], on_off(user), list(devices))
             
             
 
