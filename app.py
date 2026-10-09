@@ -15,7 +15,7 @@ load_dotenv()
 model_id = "LiquidAI/LFM2.5-Encoder-350M-Prompt-Router"
 tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 routingmodel = AutoModel.from_pretrained(model_id, trust_remote_code=True).eval()
-routingmodel = routingmodel.to("metal")
+routingmodel = routingmodel.to("mps")
 
 
 def warmup():
@@ -63,6 +63,8 @@ def get_room_devices(zoneid, bearer):
     for device in getdevices.json().values():
         if device['zone'] == zoneid:
             devices[device['name']] = device['id']
+            
+    return devices
             
 
 def onoffcontrol(devicetocontrol, statetoset, deviceslist):
@@ -125,9 +127,14 @@ def main():
             command_cup = np.frombuffer(mic_stream.read(RATE * 3), dtype=np.int16).astype(np.float32) / 32768.0
             
             
-            segments, _ = model.transcribe("audio.mp3")
-            segments = list(segments)
-            print(segments)
+            segments, _ = model.transcribe(command_cup)
+            user = list(segments)
+            
+            print(user)
+            
+            onoffcontrol(best_device(user, devices), on_off(user), devices)
+            
+            
 
 
 
